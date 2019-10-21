@@ -1,0 +1,37 @@
+PROGRAM	    	= cholesky
+
+CC 		= icc
+
+OMP_FLAGS	= -qopenmp
+EXTRA		= -ggdb -O3
+
+#LDFLAGS	= -L/home/sroyuela/Software/Libraries/Mkl/ins/mkl/lib/intel64
+LDFLAGS         = -L/apps/INTEL/2017.4/mkl/lib/intel64
+
+
+LIBS  		= -lmkl_sequential -lmkl_core -lmkl_rt -lm
+#INCS  		= -I/home/sroyuela/Software/Libraries/Mkl/ins/mkl/include
+INCS		= -I/apps/INTEL/2017.4/mkl/include
+
+TARGETS     	= $(PROGRAM)_seq $(PROGRAM)_tasks $(PROGRAM)_tasks_low $(PROGRAM)_deps $(PROGRAM)_deps_low
+
+all: clean $(TARGETS)
+
+$(PROGRAM)_seq: $(PROGRAM)_omp.c
+	$(CC) -DVERBOSE -DSEQ $(CPPFLAGS) $(INCS) $+ -o $@ $(LDFLAGS) $(LIBS)
+
+$(PROGRAM)_tasks: $(PROGRAM)_omp.c
+	$(CC) -DVERBOSE -DTASKS $(EXTRA) $(CPPFLAGS) $(OMP_FLAGS) $(INCS) $+ -o $@ $(LDFLAGS) $(LIBS) 
+
+$(PROGRAM)_tasks_low: $(PROGRAM)_omp.c
+	$(CC) -DVERBOSE -DTASKS_LOW $(EXTRA) $(CPPFLAGS) $(OMP_FLAGS) $(INCS) $+ -o $@ $(LDFLAGS) $(LIBS) 
+
+$(PROGRAM)_deps: $(PROGRAM)_omp.c
+	$(CC) -DVERBOSE -DDEPS $(CPPFLAGS) $(OMP_FLAGS) $(INCS) $+ -o $@ $(LDFLAGS) $(LIBS) 
+
+$(PROGRAM)_deps_low: $(PROGRAM)_omp.c
+	$(CC) -DVERBOSE -DDEPS_LOW $(CPPFLAGS) $(OMP_FLAGS) $(INCS) $+ -o $@ $(LDFLAGS) $(LIBS)
+
+.PHONY: clean
+clean:
+	rm -rf $(TARGETS) *.o

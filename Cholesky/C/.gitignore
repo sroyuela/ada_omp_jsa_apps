@@ -1,0 +1,4 @@
+*.o
+cholesky_omp_deps
+cholesky_omp_tasks
+cholesky_seq

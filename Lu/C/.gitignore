@@ -1,0 +1,6 @@
+*.o
+lu_seq
+lu_deps 
+lu_deps_check
+lu_task
+lu_task_check

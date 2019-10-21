@@ -1,0 +1,5 @@
+*.out
+*.err
+main_par
+main_seq
+
